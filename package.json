@@ -1,0 +1,23 @@
+{
+  "name": "wizard-steps-soul",
+  "version": "0.0.1",
+  "description": "framework agnostic engine for implement wizard/steps processes",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freefony/wizard-steps-soul.git"
+  },
+  "keywords": [
+    "wizards",
+    "steps"
+  ],
+  "author": "Femi oni",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/freefony/wizard-steps-soul/issues"
+  },
+  "homepage": "https://github.com/freefony/wizard-steps-soul#readme"
+}
