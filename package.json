@@ -19,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/freefony/wizard-steps-soul/issues"
   },
-  "homepage": "https://github.com/freefony/wizard-steps-soul#readme"
+  "homepage": "https://github.com/freefony/wizard-steps-soul#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^2.13.6"
+  }
 }
