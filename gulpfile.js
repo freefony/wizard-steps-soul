@@ -5,5 +5,5 @@ var tsProject = ts.createProject('tsconfig.json');
 gulp.task("default", function() {
   return tsProject.src()
     .pipe(ts(tsProject))
-    .js.pipe(gulp.dest("dist"))
+    .js.pipe(gulp.dest("scripts"))
 })
