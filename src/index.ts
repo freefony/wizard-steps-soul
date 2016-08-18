@@ -36,6 +36,10 @@ let wizard = (): any => {
     stepLength = options.steps.length
   }
 
+  let $on = function (event: string, callback = noop) {
+    _eventRegistry[event] = callback
+  }
+
   return {
     create,
   }
