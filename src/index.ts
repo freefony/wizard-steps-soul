@@ -59,10 +59,14 @@ let wizard = (): any => {
   const next = () => {
     _iteratorTicker.next()
     let currentStep = _options.steps[iteratorPointer]
+    if (typeof  currentStep.beforeNext === 'Function') {
+      currentStep.beforeNext()
+    }
     currentStep._beforeNext()
     _setScope()
-    currentStep._afterNext()
-
+    if (typeof  currentStep.afterNext === 'Function') {
+      currentStep.afterNext()
+    }
   }
 
   const _eventDispatch = (event: string, eventValue = {}):void => {
@@ -82,7 +86,8 @@ let wizard = (): any => {
 
   return {
     create,
-    $on
+    $on,
+    next
   }
 
 }

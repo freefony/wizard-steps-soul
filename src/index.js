@@ -43,9 +43,14 @@ var wizard = function () {
     var next = function () {
         _iteratorTicker.next();
         var currentStep = _options.steps[iteratorPointer];
+        if (typeof currentStep.beforeNext === 'Function') {
+            currentStep.beforeNext();
+        }
         currentStep._beforeNext();
         _setScope();
-        currentStep._afterNext();
+        if (typeof currentStep.afterNext === 'Function') {
+            currentStep.afterNext();
+        }
     };
     var _eventDispatch = function (event, eventValue) {
         if (eventValue === void 0) { eventValue = {}; }
@@ -64,6 +69,7 @@ var wizard = function () {
     };
     return {
         create: create,
-        $on: $on
+        $on: $on,
+        next: next
     };
 };
