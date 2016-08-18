@@ -7,6 +7,13 @@ interface wizardOptions {
 
 let noop: () => void
 
+String.prototype.toCamelCase = function() {
+  return this
+    .replace(/\s(.)/g, function($1: string) { return $1.toUpperCase(); })
+    .replace(/\s/g, '')
+    .replace(/^(.)/, function($1: string) { return $1.toLowerCase(); });
+}
+
 let wizard = (): any => {
   let _options: any
   let iteratorPointer: number
@@ -20,7 +27,56 @@ let wizard = (): any => {
 
   let _eventRegistry = {} as any
 
-  const _eventDispatcher = (event: string, eventValue = {}):void => {
+  const create = (options: wizardOptions) => {
+    _options = options
+    entryStep = options.entryStepNumber ? options.entryStepNumber : 1
+    iteratorPointer = entryStep
+    _beforeExit = options.beforeExit ? options.beforeExit : noop
+    _afterExit = options.afterExit ? options.afterExit : noop
+    stepLength = options.steps.length
+  }
+
+  const _iteratorTicker = {
+    next():void { iteratorPointer++ },
+    prev():void { iteratorPointer-- },
+    go(index: number):void { iteratorPointer = index}
+  }
+
+  const _setScope = () => {
+    let _currentStep =  _options.steps[iteratorPointer]
+    let scope = _currentStep
+      .actions
+      .reduce(function (scope: any, action: any) {
+        let key = action.label.toCamelCase()
+        scope[key] = action
+        return scope
+      }, {})
+    scope.templateUrl = _currentStep.templateUrl
+    _eventDispatch('onScopeChange', scope)
+    return scope
+  }
+
+  const next = () => {
+    _iteratorTicker.next()
+    let currentStep = _options.steps[iteratorPointer]
+    if (typeof  currentStep.beforeNext === 'Function') {
+      currentStep.beforeNext()
+    }
+    currentStep._beforeNext()
+    _setScope()
+    if (typeof  currentStep.afterNext === 'Function') {
+      currentStep.afterNext()
+    }
+  }
+
+  const exit = () => {
+    _beforeExit()
+    _options = []
+    iteratorPointer = 0
+    _afterExit()
+  }
+
+  const _eventDispatch = (event: string, eventValue = {}):void => {
     if (!_eventRegistry.hasOwnProperty(event)) {
       return;
     }
@@ -31,22 +87,14 @@ let wizard = (): any => {
     }
   }
 
-  const create = (options: wizardOptions) => {
-    _options = options
-    entryStep = options.entryStepNumber ? options.entryStepNumber : 1
-    iteratorPointer = entryStep
-    _beforeExit = options.beforeExit ? options.beforeExit : noop
-    _afterExit = options.afterExit ? options.afterExit : noop
-    stepLength = options.steps.length
-  }
-
   let $on = function (event: string, callback: (eventValue: any) => void) {
     _eventRegistry[event] = callback
   }
 
   return {
     create,
-    $on
+    $on,
+    next,
+    exit
   }
-
 }
