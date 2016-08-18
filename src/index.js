@@ -10,10 +10,15 @@ var wizard = function () {
     var _eventRegistry = {};
     var _eventDispatcher = function (event, eventValue) {
         if (eventValue === void 0) { eventValue = {}; }
-        if (!_eventRegistry[event]) {
+        if (!_eventRegistry.hasOwnProperty(event)) {
             return;
         }
-        _eventRegistry[event](eventValue);
+        try {
+            _eventRegistry[event](eventValue);
+        }
+        catch (e) {
+            console.error('Error: invalid callback function supplied for wizard event' + event);
+        }
     };
     var create = function (options) {
         _options = options;
@@ -23,7 +28,11 @@ var wizard = function () {
         _afterExit = options.afterExit ? options.afterExit : noop;
         stepLength = options.steps.length;
     };
+    var $on = function (event, callback) {
+        _eventRegistry[event] = callback;
+    };
     return {
         create: create,
+        $on: $on
     };
 };

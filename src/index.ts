@@ -21,10 +21,14 @@ let wizard = (): any => {
   let _eventRegistry = {} as any
 
   const _eventDispatcher = (event: string, eventValue = {}):void => {
-    if (!_eventRegistry[event]) {
-      return
+    if (!_eventRegistry.hasOwnProperty(event)) {
+      return;
     }
-    _eventRegistry[event](eventValue)
+    try {
+      _eventRegistry[event](eventValue);
+    } catch (e) {
+      console.error('Error: invalid callback function supplied for wizard event' + event);
+    }
   }
 
   const create = (options: wizardOptions) => {
@@ -36,12 +40,13 @@ let wizard = (): any => {
     stepLength = options.steps.length
   }
 
-  let $on = function (event: string, callback = noop) {
+  let $on = function (event: string, callback: (eventValue: any) => void) {
     _eventRegistry[event] = callback
   }
 
   return {
     create,
+    $on
   }
 
 }
