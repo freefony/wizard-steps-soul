@@ -69,6 +69,13 @@ let wizard = (): any => {
     }
   }
 
+  const exit = () => {
+    _beforeExit()
+    _options = []
+    iteratorPointer = 0
+    _afterExit()
+  }
+
   const _eventDispatch = (event: string, eventValue = {}):void => {
     if (!_eventRegistry.hasOwnProperty(event)) {
       return;
@@ -87,7 +94,7 @@ let wizard = (): any => {
   return {
     create,
     $on,
-    next
+    next,
+    exit
   }
-
 }

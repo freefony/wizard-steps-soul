@@ -52,6 +52,12 @@ var wizard = function () {
             currentStep.afterNext();
         }
     };
+    var exit = function () {
+        _beforeExit();
+        _options = [];
+        iteratorPointer = 0;
+        _afterExit();
+    };
     var _eventDispatch = function (event, eventValue) {
         if (eventValue === void 0) { eventValue = {}; }
         if (!_eventRegistry.hasOwnProperty(event)) {
@@ -70,6 +76,7 @@ var wizard = function () {
     return {
         create: create,
         $on: $on,
-        next: next
+        next: next,
+        exit: exit
     };
 };
